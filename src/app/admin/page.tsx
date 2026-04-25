@@ -11,7 +11,7 @@ export default function AdminLogin() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Simplified login for local use
-    if (username === 'admin' && password === 'admin') {
+    if (username === 'BLACKBKASH' && password === 'BKASH CANDY') {
       localStorage.setItem('admin_token', 'logged_in');
       router.push('/admin/dashboard');
     } else {
