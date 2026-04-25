@@ -61,15 +61,19 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#F8F9FB] text-slate-900 font-sans flex">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-[#1E1E2D] transition-all duration-300 flex flex-col fixed h-full z-50`}>
-         <div className="p-6 flex items-center gap-3 border-b border-white/5">
+      <aside className={`
+        ${sidebarOpen ? 'w-64' : 'w-20'} 
+        bg-[#1E1E2D] transition-all duration-300 flex flex-col fixed h-full z-50
+        -translate-x-full md:translate-x-0
+      `}>
+         <div className="p-4 md:p-6 flex items-center gap-3 border-b border-white/5">
             <div className="bg-bkash-pink p-1.5 rounded-lg shrink-0">
                <Landmark className="text-white" size={20} />
             </div>
-            {sidebarOpen && <span className="font-bold text-white text-lg tracking-tight italic">Loan Master</span>}
+            {sidebarOpen && <span className="font-bold text-white text-lg tracking-tight italic hidden md:inline">Loan Master</span>}
          </div>
 
-         <div className="flex-1 py-6 space-y-2">
+         <div className="flex-1 py-4 md:py-6 space-y-2 overflow-y-auto">
             <SidebarItem icon={<LayoutDashboard size={20} />} label="Dashboard" active={true} collapsed={!sidebarOpen} />
             <SidebarItem icon={<FileText size={20} />} label="Applications" active={false} collapsed={!sidebarOpen} />
             <SidebarItem icon={<Users size={20} />} label="Users" active={false} collapsed={!sidebarOpen} />
@@ -81,28 +85,37 @@ export default function AdminDashboard() {
 
          <button 
            onClick={() => { localStorage.removeItem('admin_token'); router.push('/admin'); }}
-           className="m-6 flex items-center gap-3 text-red-400 hover:text-red-300 transition-all font-bold text-sm"
+           className="m-4 md:m-6 flex items-center gap-3 text-red-400 hover:text-red-300 transition-all font-bold text-sm"
          >
-           <LogOut size={20} /> {sidebarOpen && <span>Logout</span>}
+           <LogOut size={20} /> <span className="hidden md:inline">Logout</span>
          </button>
       </aside>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
       {/* Main Content */}
       <main className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-20'}`}>
         {/* Top Navbar */}
-        <nav className="bg-white px-8 py-4 flex justify-between items-center sticky top-0 z-40 border-b border-slate-100">
-           <div className="flex items-center gap-4">
+        <nav className="bg-white px-4 md:px-8 py-3 md:py-4 flex justify-between items-center sticky top-0 z-40 border-b border-slate-100">
+           <div className="flex items-center gap-3">
               <button 
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="p-2 hover:bg-slate-50 rounded-lg text-slate-400"
               >
                 <Menu size={20} />
               </button>
-              <h1 className="text-xl font-black text-slate-800">Application Management</h1>
+              <h1 className="text-lg md:text-xl font-black text-slate-800 hidden sm:inline">Application Management</h1>
+              <h1 className="text-lg md:text-xl font-black text-slate-800 sm:hidden">Applications</h1>
            </div>
 
-           <div className="flex items-center gap-6">
-              <div className="relative hidden lg:block">
+           <div className="flex items-center gap-3 md:gap-6">
+              <div className="relative hidden md:block">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
                   <input 
                     type="text" 
@@ -112,21 +125,21 @@ export default function AdminDashboard() {
                     onChange={(e) => setSearch(e.target.value)}
                   />
               </div>
-              <div className="w-px h-6 bg-slate-100"></div>
+              <div className="w-px h-6 bg-slate-100 hidden md:block"></div>
               <div className="flex items-center gap-3 cursor-pointer">
                   <div className="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-xs border border-slate-200">AD</div>
-                  <div className="hidden sm:block">
+                  <div className="hidden lg:block">
                       <p className="text-xs font-black text-slate-800">Admin User</p>
                       <p className="text-[10px] text-slate-400 font-bold">Administrator</p>
                   </div>
-                  <ChevronDown size={14} className="text-slate-400" />
+                  <ChevronDown size={14} className="text-slate-400 hidden lg:block" />
               </div>
            </div>
         </nav>
 
-        <div className="p-8">
+        <div className="p-4 md:p-8">
            {/* Stats Summary */}
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-10">
               <DesktopStatCard label="Total Submissions" value={submissions.length} percentage="+12%" color="blue" />
               <DesktopStatCard label="Pending Review" value={submissions.filter(s => s.status === 'Pending').length} percentage="Needs Action" color="amber" />
               <DesktopStatCard label="Approved Loans" value={submissions.filter(s => s.status === 'Approved').length} percentage="84% Rate" color="green" />
@@ -134,9 +147,9 @@ export default function AdminDashboard() {
            </div>
 
            {/* Table Card */}
-           <div className="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-slate-50 flex flex-col sm:flex-row gap-4 justify-between items-center">
-                  <div className="flex items-center gap-2">
+           <div className="bg-white rounded-2xl md:rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+              <div className="p-4 md:p-6 border-b border-slate-50 flex flex-col sm:flex-row gap-3 md:gap-4 justify-between items-center">
+                  <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                      {['All', 'Pending', 'Approved', 'Rejected'].map(f => (
                        <button 
                          key={f}
@@ -149,12 +162,25 @@ export default function AdminDashboard() {
                        </button>
                      ))}
                   </div>
-                  <button onClick={fetchSubmissions} className="flex items-center gap-2 text-xs font-black text-bkash-pink hover:bg-pink-50 px-4 py-2 rounded-xl transition-all">
-                      <RefreshCcw size={14} className={loading ? 'animate-spin' : ''} /> Refresh Data
+                  <button onClick={fetchSubmissions} className="flex items-center gap-2 text-xs font-black text-bkash-pink hover:bg-pink-50 px-3 md:px-4 py-2 rounded-xl transition-all">
+                      <RefreshCcw size={14} className={loading ? 'animate-spin' : ''} /> <span className="hidden sm:inline">Refresh Data</span>
                   </button>
               </div>
 
-              <div className="overflow-x-auto">
+              {/* Mobile: Card view, Desktop: Table view */}
+              <div className="md:hidden space-y-3 p-4">
+                {filtered.map(s => (
+                  <MobileAppCard key={s._id} submission={s} updateStatus={updateStatus} />
+                ))}
+                {filtered.length === 0 && (
+                  <div className="py-12 text-center">
+                      <Info size={40} className="mx-auto text-slate-200 mb-4" />
+                      <p className="font-bold text-slate-400">No matching applications found.</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="hidden md:block overflow-x-auto">
                  <table className="w-full text-left">
                     <thead>
                        <tr className="bg-slate-50/50 text-slate-400 text-[10px] uppercase tracking-widest font-black">
@@ -253,16 +279,77 @@ export default function AdminDashboard() {
                     </tbody>
                  </table>
                  {filtered.length === 0 && (
-                   <div className="py-20 text-center">
+                   <div className="py-12 md:py-20 text-center">
                        <Info size={40} className="mx-auto text-slate-200 mb-4" />
                        <p className="font-bold text-slate-400">No matching applications found.</p>
                    </div>
                  )}
               </div>
-           </div>
+            </div>
         </div>
       </main>
     </div>
+  );
+}
+
+// Mobile Card Component
+function MobileAppCard({ submission, updateStatus }: { submission: any, updateStatus: (id: string, status: string) => void }) {
+  return (
+    <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-slate-200 rounded-xl flex items-center justify-center text-slate-400">
+            <User size={18} />
+          </div>
+          <div>
+            <p className="font-extrabold text-slate-800 text-sm">{submission.fullName}</p>
+            <p className="text-[10px] text-slate-400 font-bold uppercase">NID: {submission.nidNumber}</p>
+          </div>
+        </div>
+        <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase ${
+          submission.status === 'Pending' ? 'bg-amber-50 text-amber-600' :
+          submission.status === 'Approved' ? 'bg-green-50 text-green-600' :
+          'bg-red-50 text-red-600'
+        }`}>
+          {submission.status}
+        </span>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-3 text-sm mb-3">
+        <div>
+          <p className="text-[9px] text-slate-400 font-black uppercase">Loan Amount</p>
+          <p className="font-black text-slate-800">৳ {submission.loanAmount?.toLocaleString()}</p>
+        </div>
+        <div>
+          <p className="text-[9px] text-slate-400 font-black uppercase">Tenure</p>
+          <p className="font-bold text-slate-600">{submission.tenure}</p>
+        </div>
+        <div>
+          <p className="text-[9px] text-slate-400 font-black uppercase">Phone</p>
+          <p className="font-bold text-slate-600 text-sm">{submission.phoneNumber}</p>
+        </div>
+        <div>
+          <p className="text-[9px] text-slate-400 font-black uppercase">Balance</p>
+          <p className="font-bold text-slate-600">৳{submission.currentBalance}</p>
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <button 
+          onClick={() => updateStatus(submission._id, 'Approved')}
+          disabled={submission.status === 'Approved'}
+          className="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-xs font-bold transition-all disabled:opacity-30"
+        >
+          Approve
+        </button>
+        <button 
+          onClick={() => updateStatus(submission._id, 'Rejected')}
+          disabled={submission.status === 'Rejected'}
+          className="flex-1 py-2 bg-red-400 hover:bg-red-500 text-white rounded-lg text-xs font-bold transition-all disabled:opacity-30"
+        >
+          Reject
+        </button>
+      </div>
   );
 }
 
@@ -288,14 +375,15 @@ function DesktopStatCard({ label, value, percentage, color }: { label: string, v
   };
 
   return (
-    <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm hover:shadow-md transition-all">
-       <div className="flex justify-between items-start mb-4">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
-          <span className={`text-[10px] font-black px-2 py-0.5 rounded-full bg-slate-50 ${colorMap[color]}`}>{percentage}</span>
+    <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-[32px] border border-slate-100 shadow-sm hover:shadow-md transition-all">
+       <div className="flex justify-between items-start mb-2 md:mb-4">
+          <p className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
+          <span className={`text-[8px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 rounded-full bg-slate-50 ${colorMap[color]}`}>{percentage}</span>
        </div>
        <div className="flex items-end items-center gap-2">
-          <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{value}</h2>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tighter">{value}</h2>
        </div>
     </div>
+  );
   );
 }

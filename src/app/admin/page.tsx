@@ -20,9 +20,9 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-      <div className="w-full max-w-md p-8 bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
-        <h1 className="text-3xl font-bold mb-6 text-center text-bkash-pink">Admin Login</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+      <div className="w-full max-w-md p-6 md:p-8 bg-gray-800 rounded-2xl md:rounded-xl shadow-2xl border border-gray-700">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center text-bkash-pink">Admin Login</h1>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2">Username</label>
